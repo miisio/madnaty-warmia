@@ -2,400 +2,390 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Mandaty i Wnioski - Warmia RP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mandaty i Wnioski do Sądu - Warmia RP</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 650px;
-      margin: 20px auto;
-      background: #f0f2f5;
-      padding: 25px 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+      background: #f4f6f8;
+      margin: 0; padding: 20px;
       color: #222;
     }
     h1 {
       text-align: center;
-      margin-bottom: 25px;
-      color: #333;
-      letter-spacing: 1.2px;
+      margin-bottom: 15px;
+      color: #2c3e50;
     }
-    button.tab-btn {
-      padding: 12px 22px;
-      margin-right: 12px;
+    .tabs {
+      display: flex;
+      justify-content: center;
       margin-bottom: 20px;
-      border: none;
-      border-radius: 8px;
-      background: #3b82f6;
+      gap: 10px;
+    }
+    .tab-btn {
+      padding: 10px 25px;
+      background: #3498db;
       color: white;
-      font-weight: 600;
+      border: none;
+      border-radius: 5px 5px 0 0;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      font-weight: 600;
+      transition: background-color 0.3s;
     }
-    button.tab-btn:hover {
-      background: #2563eb;
-    }
-    button.tab-btn.active {
-      background: #1e40af;
+    .tab-btn.active {
+      background: #1d6fa5;
     }
     .tab {
+      background: white;
+      max-width: 600px;
+      margin: 0 auto;
+      border-radius: 0 5px 5px 5px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+      padding: 20px;
       display: none;
-      animation: fadeIn 0.5s ease forwards;
     }
     .tab.active {
       display: block;
     }
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-    form label {
-      font-weight: 600;
+    label {
       display: block;
-      margin-top: 15px;
-      margin-bottom: 6px;
+      margin: 15px 0 5px 0;
+      font-weight: 600;
     }
-    input[type=text], input[type=number], input[type=datetime-local], input[type=time], select, textarea {
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea {
       width: 100%;
-      padding: 10px 12px;
+      padding: 8px 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
       font-size: 14px;
-      border: 1.7px solid #ccc;
-      border-radius: 7px;
       box-sizing: border-box;
-      transition: border-color 0.3s ease;
-    }
-    input[type=text]:focus, input[type=number]:focus, input[type=datetime-local]:focus, input[type=time]:focus, select:focus, textarea:focus {
-      border-color: #3b82f6;
-      outline: none;
     }
     textarea {
       resize: vertical;
-      min-height: 80px;
-      font-family: inherit;
+      min-height: 60px;
     }
-    button[type=submit] {
+    button[type="submit"] {
       margin-top: 20px;
-      background-color: #10b981;
+      background-color: #27ae60;
       border: none;
-      padding: 12px 22px;
       color: white;
-      font-weight: 700;
-      border-radius: 8px;
-      cursor: pointer;
+      padding: 12px 20px;
       font-size: 16px;
-      transition: background-color 0.3s ease;
-    }
-    button[type=submit]:hover {
-      background-color: #059669;
-    }
-    #statusMandat, #statusWniosek {
-      margin-top: 15px;
+      border-radius: 5px;
+      cursor: pointer;
       font-weight: 700;
-      min-height: 1.3em;
+      width: 100%;
+      transition: background-color 0.3s;
     }
-    .small-note {
-      font-size: 0.85em;
-      color: #555;
-      margin-top: -10px;
-      margin-bottom: 12px;
+    button[type="submit"]:hover {
+      background-color: #1e8449;
     }
-    /* Poprawiony odstęp przy linii */
-    .line-field {
-      margin: 18px 0;
-      font-weight: 600;
-      color: #888;
-      user-select: none;
+    .status {
+      margin-top: 12px;
+      font-weight: 700;
+    }
+    .separator {
+      margin: 25px 0;
+      border-top: 1px solid #ddd;
     }
   </style>
 </head>
 <body>
 
-  <h1>Mandaty i Wnioski - Warmia RP</h1>
+  <h1>Mandaty i Wnioski do Sądu - Warmia RP</h1>
 
-  <button class="tab-btn active" onclick="showTab('mandat')">Mandat</button>
-  <button class="tab-btn" onclick="showTab('wniosek')">Wniosek do sądu</button>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('mandat')">Wypisz mandat</button>
+    <button class="tab-btn" onclick="showTab('wniosek')">Wniosek do sądu</button>
+  </div>
 
   <div id="mandat" class="tab active">
     <form id="mandatForm">
+      <label for="imie">Imię i nazwisko osoby ukaranej</label>
+      <input type="text" id="imie" required placeholder="Np. Tomasz Malinowski" />
 
-      <label>Imię i nazwisko ukaranego:</label>
-      <input type="text" id="imie" required placeholder="np. Tomasz Malinowski" />
+      <label for="nick">Nick (OOC)</label>
+      <input type="text" id="nick" required placeholder="Np. Malina#1122" />
 
-      <label>Nick (OOC):</label>
-      <input type="text" id="nick" required placeholder="np. Malina#1122" />
+      <label for="dataWystawienia">Data wystawienia mandatu</label>
+      <input type="date" id="dataWystawienia" required />
 
-      <label>Data i godzina wystawienia:</label>
-      <input type="datetime-local" id="dataWystawienia" required />
-
-      <label>Godzina zdarzenia:</label>
+      <label for="godzinaZdarzenia">Godzina zdarzenia</label>
       <input type="time" id="godzinaZdarzenia" required />
 
-      <label>Miejsce zdarzenia:</label>
-      <input type="text" id="miejsce" required placeholder="np. Olsztyn, ul. Warszawska" />
+      <label for="miejsce">Miejsce zdarzenia</label>
+      <input type="text" id="miejsce" required placeholder="Np. Olsztyn, ul. Warszawska" />
 
-      <label>Przyczyna nałożenia mandatu:</label>
+      <label for="przyczyna">Przyczyna nałożenia mandatu</label>
       <select id="przyczyna" required onchange="toggleInnePole()">
         <option value="" disabled selected>Wybierz przyczynę</option>
-        <option>Przekroczenie prędkości w terenie zabudowanym</option>
-        <option>Nieprawidłowe parkowanie</option>
-        <option>Jazda bez zapiętych pasów</option>
-        <option>Brak ważnego ubezpieczenia</option>
+        <option value="Przekroczenie prędkości">Przekroczenie prędkości</option>
+        <option value="Nieprawidłowe parkowanie">Nieprawidłowe parkowanie</option>
+        <option value="Jazda pod wpływem alkoholu">Jazda pod wpływem alkoholu</option>
+        <option value="Nieustąpienie pierwszeństwa">Nieustąpienie pierwszeństwa</option>
         <option value="inne">Inne wykroczenie drogowe</option>
       </select>
 
-      <div id="innePrzyczynaDiv" style="display:none;">
-        <label>Opisz inną przyczynę:</label>
-        <input type="text" id="innePrzyczyna" placeholder="Napisz dokładną przyczynę" />
+      <div id="innePrzyczynaDiv" style="display:none; margin-top:10px;">
+        <label for="innePrzyczyna">Opisz inną przyczynę</label>
+        <textarea id="innePrzyczyna" placeholder="Wpisz dokładny opis przyczyny..."></textarea>
       </div>
 
-      <label>Kwota mandatu (PLN):</label>
-      <input type="number" id="kwota" min="1" required placeholder="np. 5000" />
+      <label for="kwota">Kwota mandatu (PLN)</label>
+      <input type="number" id="kwota" required min="1" step="1" placeholder="Np. 5000" />
 
-      <label>Punkty karne:</label>
-      <input type="number" id="punkty" min="0" required placeholder="np. 10" />
+      <label for="punkty">Punkty karne</label>
+      <input type="number" id="punkty" required min="0" step="1" placeholder="Np. 10" />
 
-      <label>Typ pojazdu:</label>
-      <input type="text" id="pojazd" placeholder="np. Mini van" required />
+      <label for="pojazd">Typ pojazdu</label>
+      <input type="text" id="pojazd" required placeholder="Np. Mini van" />
 
-      <label>Użytkownik pojazdu:</label>
-      <input type="text" id="uzytkownik" placeholder="np. firma pocztowa" required />
+      <label for="uzytkownik">Użytkownik pojazdu</label>
+      <input type="text" id="uzytkownik" required placeholder="Np. firma pocztowa" />
 
-      <label>Funkcjonariusz (imię i stopień):</label>
-      <input type="text" id="funkcjonariusz" placeholder="np. sierż. sztab. Marek Nowak" required />
+      <label for="funkcjonariusz">Funkcjonariusz wystawiający mandat (imię, stopień)</label>
+      <input type="text" id="funkcjonariusz" required placeholder="Np. Sierżant sztabowy Marek Nowak" />
 
       <button type="submit">Wyślij mandat</button>
+      <div id="statusMandat" class="status"></div>
     </form>
-    <div id="statusMandat"></div>
   </div>
 
   <div id="wniosek" class="tab">
     <form id="wniosekForm">
+      <label for="ukarany">Imię i nazwisko osoby ukaranej</label>
+      <input type="text" id="ukarany" required placeholder="Np. Tomasz Malinowski" />
 
-      <label>Imię i nazwisko ukaranego:</label>
-      <input type="text" id="ukarany" required placeholder="np. Tomasz Malinowski" />
+      <label for="nickWniosek">Nick (OOC)</label>
+      <input type="text" id="nickWniosek" placeholder="Np. Malina#1122" />
 
-      <label>Nick (OOC):</label>
-      <input type="text" id="nickWniosek" placeholder="np. Malina#1122" />
-
-      <label>Data wystawienia mandatu:</label>
+      <label for="dataMandatu">Data wystawienia mandatu</label>
       <input type="date" id="dataMandatu" />
 
-      <label>Typ mandatu / wykroczenia:</label>
-      <input type="text" id="typMandatu" placeholder="np. Przekroczenie prędkości" />
+      <label for="typMandatu">Typ mandatu / wykroczenia</label>
+      <input type="text" id="typMandatu" placeholder="Np. Przekroczenie prędkości" />
 
-      <label>Kwota mandatu (PLN):</label>
-      <input type="number" id="kwotaMandatu" min="0" placeholder="np. 5000" />
+      <label for="kwotaMandatu">Kwota mandatu (PLN)</label>
+      <input type="number" id="kwotaMandatu" min="0" step="1" placeholder="Np. 5000" />
 
-      <label>Opis sprawy / powód wniosku:</label>
-      <textarea id="powod" required placeholder="Np. Odwołanie od mandatu, wyjaśnienie okoliczności..."></textarea>
+      <label for="powod">Opis sprawy / powód złożenia wniosku</label>
+      <textarea id="powod" required placeholder="Np. Nie zgadzam się z wysokością mandatu" ></textarea>
 
-      <button type="submit">Wyślij wniosek</button>
+      <button type="submit">Wyślij wniosek do sądu</button>
+      <div id="statusWniosek" class="status"></div>
     </form>
-    <div id="statusWniosek"></div>
   </div>
 
-<script>
-  // Nowe webhooki od Ciebie:
-  const webhookMandat = 'https://discord.com/api/webhooks/1403683432227410001/aSOQ2awWpU5bBgGsgo1E0k_kkBIGU6bwOUEBsuSXgaVc-vp3-cmAlIWk5wHSkkdLheNg';
-  const webhookSadDecyzja = 'https://discord.com/api/webhooks/1403681144029057074/qWog2W1UxsgQp1P_IzmI0sqjmXtC7ZD4Fw3XsGhLX39AFaW31cyTC1Y0bNh6AfeqXy8c';
-  const webhookWniosekSad = 'https://discord.com/api/webhooks/1403683863867166820/JQcyZ777-KCpdze6TrnbkHyz5vpFrqD7H1QnFAmnOoXiW_Cq_nLdmKODlzioiI-YHePO';
+  <script>
+    // WEBHOOKI - Twoje linki:
+    const webhookMandat = "https://discord.com/api/webhooks/1403683432227410001/aSOQ2awWpU5bBgGsgo1E0k_kkBIGU6bwOUEBsuSXgaVc-vp3-cmAlIWk5wHSkkdLheNg";
+    const webhookSadDecyzja = "https://discord.com/api/webhooks/1403681144029057074/qWog2W1UxsgQp1P_IzmI0sqjmXtC7ZD4Fw3XsGhLX39AFaW31cyTC1Y0bNh6AfeqXy8c";
+    const webhookWniosekSad = "https://discord.com/api/webhooks/1403683863867166820/JQcyZ777-KCpdze6TrnbkHyz5vpFrqD7H1QnFAmnOoXiW_Cq_nLdmKODlzioiI-YHePO";
 
-  // Przełączanie zakładek
-  const tabs = document.querySelectorAll('.tab');
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  function showTab(id) {
-    tabs.forEach(t => t.classList.remove('active'));
-    tabBtns.forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    event.currentTarget.classList.add('active');
-  }
-
-  // Pokaż/ukryj pole "inne przyczyna"
-  function toggleInnePole() {
-    const przyczyna = document.getElementById('przyczyna').value;
-    document.getElementById('innePrzyczynaDiv').style.display = przyczyna === 'inne' ? 'block' : 'none';
-  }
-
-  // Funkcja wysyłająca embed do webhooka Discord
-  async function wyslijWebhook(url, embed) {
-    const body = JSON.stringify({ embeds: [embed] });
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: body
-    });
-    if(!response.ok) {
-      throw new Error(`Błąd sieci: ${response.status} ${response.statusText}`);
+    const tabs = document.querySelectorAll('.tab');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    function showTab(id) {
+      tabs.forEach(t => t.classList.remove('active'));
+      tabBtns.forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.currentTarget.classList.add('active');
     }
-  }
 
-  // Formularz mandatu
-  document.getElementById('mandatForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    const status = document.getElementById('statusMandat');
-    status.style.color = 'black';
-    status.textContent = 'Wysyłam mandat...';
+    function toggleInnePole() {
+      const przyczyna = document.getElementById('przyczyna').value;
+      document.getElementById('innePrzyczynaDiv').style.display = przyczyna === 'inne' ? 'block' : 'none';
+    }
 
-    try {
-      const imie = document.getElementById('imie').value.trim();
-      const nick = document.getElementById('nick').value.trim();
-      const dataWystawieniaRaw = document.getElementById('dataWystawienia').value;
-      const godzinaZdarzeniaRaw = document.getElementById('godzinaZdarzenia').value;
-      const miejsce = document.getElementById('miejsce').value.trim();
-      let przyczyna = document.getElementById('przyczyna').value;
-      if (przyczyna === 'inne') {
-        const inneText = document.getElementById('innePrzyczyna').value.trim();
-        if (!inneText) {
-          status.style.color = 'red';
-          status.textContent = 'Proszę wpisać opis innej przyczyny.';
-          return;
-        }
-        przyczyna = inneText;
+    async function wyslijWebhook(url, embed) {
+      const body = JSON.stringify({ embeds: [embed] });
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body
+      });
+      if (!response.ok) {
+        throw new Error(`Błąd sieci: ${response.status} ${response.statusText}`);
       }
-      const kwota = Number(document.getElementById('kwota').value);
-      const punkty = Number(document.getElementById('punkty').value);
-      const pojazd = document.getElementById('pojazd').value.trim();
-      const uzytkownik = document.getElementById('uzytkownik').value.trim();
-      const funkcjonariusz = document.getElementById('funkcjonariusz').value.trim();
-
-      // Format daty i godziny do czytelnej formy
-      const dataObj = new Date(dataWystawieniaRaw);
-      const dataStr = dataObj.toLocaleDateString('pl-PL') + ', godz. ' + dataObj.toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'});
-
-      // Godzina zdarzenia - już jest godzina w hh:mm
-      const godzinaZdarzenia = godzinaZdarzeniaRaw;
-
-      // Embed mandatu
-      const embed = {
-        title: ":money_with_wings: MANDAT KARNY",
-        description: "**Komenda Wojewódzka Policji w Olsztynie – Warmia RP**",
-        color: 0xdc143c,
-        fields: [
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
-          { name: 'Dane osoby ukaranej', value: `> Imię i nazwisko: **${imie}**\n> Nick (OOC): ${nick}`, inline: false },
-          { name: 'Data i godzina wystawienia:', value: dataStr, inline: true },
-          { name: 'Godzina zdarzenia:', value: godzinaZdarzenia, inline: true },
-          { name: 'Miejsce zdarzenia:', value: miejsce, inline: false },
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
-          { name: 'Przyczyna nałożenia mandatu', value: przyczyna, inline: false },
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
-          { name: 'Wymiar kary', value: `Kwota mandatu: **${kwota.toLocaleString()} PLN**\nPunkty karne: **${punkty} pkt**`, inline: false },
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
-          { name: 'Dane pojazdu', value: `Typ: ${pojazd}\nUżytkownik pojazdu: ${uzytkownik}`, inline: false },
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
-          { name: 'Funkcjonariusz wystawiający mandat', value: funkcjonariusz, inline: false },
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
-          { name: 'Uwagi', value: '—', inline: false },
-          { name: ':warning: Informacja', value: 'Mandat należy uiścić w terminie 7 dni od daty wystawienia. Brak zapłaty skutkuje wszczęciem postępowania.', inline: false },
-        ],
-        footer: { text: "Komenda Wojewódzka Policji w Olsztynie – Warmia RP" },
-        timestamp: new Date().toISOString(),
-      };
-
-      await wyslijWebhook(webhookMandat, embed);
-      status.style.color = 'green';
-      status.textContent = 'Mandat został wysłany pomyślnie!';
-      e.target.reset();
-      toggleInnePole();
-
-    } catch(err) {
-      status.style.color = 'red';
-      status.textContent = 'Błąd podczas wysyłania mandatu: ' + err.message;
     }
-  });
 
-  // Formularz wniosku do sądu
-  document.getElementById('wniosekForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    const status = document.getElementById('statusWniosek');
-    status.style.color = 'black';
-    status.textContent = 'Wysyłam wniosek do sądu...';
+    document.getElementById('mandatForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const status = document.getElementById('statusMandat');
+      status.style.color = 'black';
+      status.textContent = 'Wysyłam mandat...';
 
-    try {
-      const ukarany = document.getElementById('ukarany').value.trim();
-      const nick = document.getElementById('nickWniosek').value.trim() || '—';
-      const dataMandatu = document.getElementById('dataMandatu').value || '—';
-      const typMandatu = document.getElementById('typMandatu').value.trim() || '—';
-      const kwotaMandatu = document.getElementById('kwotaMandatu').value ? Number(document.getElementById('kwotaMandatu').value) : '—';
-      const powod = document.getElementById('powod').value.trim();
-
-      // Embed wniosku
-      const embed = {
-        title: ":scroll: WNIOSEK DO SĄDU",
-        description: "**Komenda Wojewódzka Policji w Olsztynie – Warmia RP**",
-        color: 0x3b82f6,
-        fields: [
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b' },
-          { name: 'Dane osoby ukaranej', value: `> Imię i nazwisko: **${ukarany}**\n> Nick (OOC): ${nick}` },
-          { name: 'Data wystawienia mandatu:', value: dataMandatu },
-          { name: 'Typ mandatu / wykroczenia:', value: typMandatu },
-          { name: 'Kwota mandatu:', value: kwotaMandatu === '—' ? '—' : `${kwotaMandatu.toLocaleString()} PLN` },
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b' },
-          { name: 'Opis sprawy / powód:', value: powod },
-          { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b' },
-          { name: 'Decyzja sądu zostanie wysłana na kanał:', value: '<#1398630915663466562>' }
-        ],
-        footer: { text: "Komenda Wojewódzka Policji w Olsztynie – Warmia RP" },
-        timestamp: new Date().toISOString(),
-      };
-
-      await wyslijWebhook(webhookWniosekSad, embed);
-
-      status.textContent = 'Wniosek wysłany! Czekam na decyzję sądu...';
-
-      // Symulacja decyzji sądu - po 2 sekundach wysyłamy embed decyzji na webhookSadDecyzja
-      setTimeout(async () => {
-        try {
-          // Przykładowa decyzja sądu - losowo wybierana:
-          const decyzje = [
-            {
-              status: 'Wniosek rozpatrzony pozytywnie.',
-              komentarz: 'Mandat został anulowany. Proszę o zaprzestanie dalszych naruszeń prawa.',
-              kolor: 0x059669
-            },
-            {
-              status: 'Wniosek odrzucony.',
-              komentarz: 'Mandat pozostaje ważny. Proszę uiścić kwotę w terminie.',
-              kolor: 0xdc143c
-            },
-            {
-              status: 'Wniosek rozpatrzony częściowo pozytywnie.',
-              komentarz: 'Kwota mandatu została zmniejszona o 50%.',
-              kolor: 0xf59e0b
-            }
-          ];
-
-          const decyzja = decyzje[Math.floor(Math.random() * decyzje.length)];
-
-          const decyzjaEmbed = {
-            title: ":hammer: DECYZJA SĄDU",
-            description: `Wniosek dotyczący **${ukarany}** został rozpatrzony.`,
-            color: decyzja.kolor,
-            fields: [
-              { name: 'Status decyzji:', value: decyzja.status },
-              { name: 'Komentarz:', value: decyzja.komentarz }
-            ],
-            footer: { text: "Komenda Wojewódzka Policji w Olsztynie – Warmia RP" },
-            timestamp: new Date().toISOString(),
-          };
-
-          await wyslijWebhook(webhookSadDecyzja, decyzjaEmbed);
-          status.style.color = 'green';
-          status.textContent = 'Decyzja sądu została wysłana na kanał Discord.';
-        } catch(err) {
-          status.style.color = 'red';
-          status.textContent = 'Błąd podczas wysyłania decyzji sądu: ' + err.message;
+      try {
+        const imie = document.getElementById('imie').value.trim();
+        const nick = document.getElementById('nick').value.trim();
+        const dataWystawieniaRaw = document.getElementById('dataWystawienia').value;
+        const godzinaZdarzeniaRaw = document.getElementById('godzinaZdarzenia').value;
+        const miejsce = document.getElementById('miejsce').value.trim();
+        let przyczyna = document.getElementById('przyczyna').value;
+        if (przyczyna === 'inne') {
+          const inneText = document.getElementById('innePrzyczyna').value.trim();
+          if (!inneText) {
+            status.style.color = 'red';
+            status.textContent = 'Proszę wpisać opis innej przyczyny.';
+            return;
+          }
+          przyczyna = inneText;
         }
-      }, 2000);
+        const kwota = Number(document.getElementById('kwota').value);
+        const punkty = Number(document.getElementById('punkty').value);
+        const pojazd = document.getElementById('pojazd').value.trim();
+        const uzytkownik = document.getElementById('uzytkownik').value.trim();
+        const funkcjonariusz = document.getElementById('funkcjonariusz').value.trim();
 
-      e.target.reset();
+        const dataObj = new Date(dataWystawieniaRaw);
+        const dataStr = dataObj.toLocaleDateString('pl-PL') + ', godz. ' + dataObj.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        const godzinaZdarzenia = godzinaZdarzeniaRaw;
 
-    } catch(err) {
-      status.style.color = 'red';
-      status.textContent = 'Błąd podczas wysyłania wniosku: ' + err.message;
+        const embed = {
+          title: ":money_with_wings: MANDAT KARNY",
+          description: "**Komenda Wojewódzka Policji w Olsztynie – Warmia RP**",
+          color: 0xdc143c,
+          fields: [
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: 'Dane osoby ukaranej', value: `> Imię i nazwisko: **${imie}**\n> Nick (OOC): ${nick}`, inline: false },
+            { name: 'Data i godzina wystawienia:', value: dataStr, inline: true },
+            { name: 'Godzina zdarzenia:', value: godzinaZdarzenia, inline: true },
+            { name: 'Miejsce zdarzenia:', value: miejsce, inline: false },
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: 'Przyczyna nałożenia mandatu', value: przyczyna, inline: false },
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: 'Wymiar kary', value: `Kwota mandatu: **${kwota.toLocaleString()} PLN**\nPunkty karne: **${punkty} pkt**`, inline: false },
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: 'Dane pojazdu', value: `Typ: ${pojazd}\nUżytkownik: ${uzytkownik}`, inline: false },
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: 'Funkcjonariusz wystawiający mandat', value: funkcjonariusz, inline: false },
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: ':warning: Mandat należy uiścić w terminie 7 dni od daty wystawienia. Brak zapłaty skutkuje wszczęciem postępowania.', value: '\u200b', inline: false }
+          ],
+          timestamp: new Date().toISOString(),
+          footer: {
+            text: "Komenda Wojewódzka Policji - Warmia RP"
+          }
+        };
+
+        await wyslijWebhook(webhookMandat, embed);
+        status.style.color = 'green';
+        status.textContent = 'Mandat został wysłany pomyślnie!';
+        e.target.reset();
+        document.getElementById('innePrzyczynaDiv').style.display = 'none';
+      } catch (error) {
+        status.style.color = 'red';
+        status.textContent = 'Błąd podczas wysyłania: ' + error.message;
+      }
+    });
+
+    document.getElementById('wniosekForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const status = document.getElementById('statusWniosek');
+      status.style.color = 'black';
+      status.textContent = 'Wysyłam wniosek do sądu...';
+
+      try {
+        const ukarany = document.getElementById('ukarany').value.trim();
+        const nickWniosek = document.getElementById('nickWniosek').value.trim();
+        const dataMandatuRaw = document.getElementById('dataMandatu').value;
+        const typMandatu = document.getElementById('typMandatu').value.trim();
+        const kwotaMandatu = document.getElementById('kwotaMandatu').value;
+        const powod = document.getElementById('powod').value.trim();
+
+        const dataMandatu = dataMandatuRaw ? new Date(dataMandatuRaw).toLocaleDateString('pl-PL') : "Brak danych";
+
+        const embedWniosek = {
+          title: ":scroll: Wniosek o ukaranie do sądu",
+          description: "**Komenda Wojewódzka Policji w Olsztynie – Warmia RP**",
+          color: 0x3498db,
+          fields: [
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: 'Dane osoby ukaranej', value: `> Imię i nazwisko: **${ukarany}**\n> Nick (OOC): ${nickWniosek || 'Brak'}`, inline: false },
+            { name: 'Data mandatu', value: dataMandatu, inline: true },
+            { name: 'Typ mandatu / wykroczenia', value: typMandatu || 'Brak', inline: true },
+            { name: 'Kwota mandatu', value: kwotaMandatu ? `${Number(kwotaMandatu).toLocaleString()} PLN` : 'Brak', inline: true },
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: 'Powód złożenia wniosku', value: powod, inline: false },
+            { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+            { name: 'Decyzja sądu zostanie opublikowana na kanale <#1398630915663466562>', value: '\u200b', inline: false }
+          ],
+          timestamp: new Date().toISOString(),
+          footer: {
+            text: "Komenda Wojewódzka Policji - Warmia RP"
+          }
+        };
+
+        await wyslijWebhook(webhookWniosekSad, embedWniosek);
+        status.style.color = 'green';
+        status.textContent = 'Wniosek został wysłany! Oczekiwanie na decyzję sądu...';
+
+        // Symulacja decyzji sądu po 2 sekundach
+        setTimeout(async () => {
+          const decyzja = losujDecyzje();
+          const embedDecyzja = {
+            title: ":judge: Decyzja sądu",
+            description: `Sąd rozpatrzył wniosek o ukaranie osoby **${ukarany}**.`,
+            color: decyzja.color,
+            fields: [
+              { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+              { name: 'Decyzja:', value: decyzja.text, inline: false },
+              { name: 'Szczegóły:', value: decyzja.details, inline: false },
+              { name: '━━━━━━━━━━━━━━━━━━━━━━━━━━', value: '\u200b', inline: false },
+              { name: 'Mandat:', value: kwotaMandatu ? `${Number(kwotaMandatu).toLocaleString()} PLN` : 'Brak danych', inline: true },
+              { name: 'Typ mandatu:', value: typMandatu || 'Brak danych', inline: true },
+              { name: 'Data mandatu:', value: dataMandatu, inline: true },
+              { name: 'Kanał z decyzją sądu:', value: '<#1398630915663466562>', inline: false }
+            ],
+            timestamp: new Date().toISOString(),
+            footer: {
+              text: "Komenda Wojewódzka Policji - Warmia RP"
+            }
+          };
+          try {
+            await wyslijWebhook(webhookSadDecyzja, embedDecyzja);
+          } catch(err) {
+            console.error('Błąd wysyłania decyzji sądu:', err);
+          }
+        }, 2000);
+
+      } catch (error) {
+        status.style.color = 'red';
+        status.textContent = 'Błąd podczas wysyłania wniosku: ' + error.message;
+      }
+    });
+
+    function losujDecyzje() {
+      // Losowanie procentowe decyzji:
+      // Grzywna: 70%
+      // Areszt: 25%
+      // Uniewinnienie: 5%
+      const los = Math.random();
+      if (los < 0.7) {
+        return {
+          text: "Skazano na grzywnę.",
+          details: "Wymierzono karę grzywny w wysokości określonej w mandacie.",
+          color: 0x27ae60 // zieleń
+        };
+      } else if (los < 0.95) {
+        return {
+          text: "Skazano na areszt.",
+          details: "Wymierzono karę aresztu - zatrzymanie na określony czas.",
+          color: 0xe67e22 // pomarańczowy
+        };
+      } else {
+        return {
+          text: "Uniewinniono oskarżonego.",
+          details: "Sąd uznał wniosek za bezzasadny i uniewinnił oskarżonego.",
+          color: 0x2980b9 // niebieski
+        };
+      }
     }
-  });
-</script>
+  </script>
 
 </body>
 </html>
