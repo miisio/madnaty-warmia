@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mandaty i Wnioski - Summer RP</title>
+    <title>Mobilny Terminal Policyjny - Summer RP</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
@@ -21,9 +21,9 @@
 
         .container {
             width: 100%;
-            max-width: 700px;
+            max-width: 900px;
             background: #161b22;
-            padding: 35px 45px;
+            padding: 30px 35px;
             border-radius: 15px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
             border: 1px solid #30363d;
@@ -31,167 +31,95 @@
 
         h1 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             color: #58a6ff;
-            font-size: 2.2em;
-            letter-spacing: 1.5px;
-            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
-            border-bottom: 2px solid #58a6ff;
-            padding-bottom: 10px;
+            font-size: 2em;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(88,166,255,0.2);
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 12px;
         }
 
         .tab-buttons {
             display: flex;
             justify-content: center;
-            margin-bottom: 30px;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
         
         button.tab-btn {
-            padding: 15px 30px;
-            margin: 0 10px;
+            padding: 12px 22px;
             border: none;
             border-radius: 10px;
             background: #21262d;
             color: #8b949e;
             font-weight: 600;
-            font-size: 1em;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
 
-        button.tab-btn:hover {
-            background: #30363d;
-            color: #c9d1d9;
-        }
-        
         button.tab-btn.active {
             background: #58a6ff;
             color: #0d1117;
-            box-shadow: 0 4px 20px rgba(88, 166, 255, 0.4);
+            box-shadow: 0 6px 20px rgba(88,166,255,0.25);
         }
 
-        .tab {
-            display: none;
-            animation: fadeIn 0.6s ease forwards;
-        }
-
-        .tab.active {
-            display: block;
-        }
+        .tab { display: none; animation: fadeIn .4s ease forwards; }
+        .tab.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        form label {
-            font-weight: 600;
-            display: block;
-            margin-top: 20px;
-            margin-bottom: 8px;
-            color: #c9d1d9;
+        form label { font-weight: 600; display:block; margin-top:14px; margin-bottom:6px; color:#c9d1d9; }
+        input[type=text], input[type=number], input[type=date], input[type=datetime-local], input[type=time], select, textarea {
+            width:100%; padding:10px 12px; font-size:1em; border:1px solid #30363d;
+            background:#21262d; color:#c9d1d9; border-radius:8px; box-sizing:border-box;
         }
+        textarea { min-height:100px; resize:vertical; font-family: 'Poppins', sans-serif; }
 
-        input[type=text], input[type=number], input[type=datetime-local], input[type=time], select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 1em;
-            border: 1px solid #30363d;
-            background-color: #21262d;
-            color: #c9d1d9;
-            border-radius: 10px;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
+        .row { display:flex; gap:12px; }
+        .row > * { flex:1; }
 
-        input[type=text]:focus, input[type=number]:focus, input[type=datetime-local]:focus, input[type=time]:focus, select:focus, textarea:focus {
-            border-color: #58a6ff;
-            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
-            outline: none;
+        button[type=submit], .send-btn {
+            margin-top:18px; background: linear-gradient(90deg,#38a169,#2f855a); border:none; padding:12px 18px;
+            color:white; font-weight:700; border-radius:10px; cursor:pointer; font-size:1em; width:100%;
+            box-shadow: 0 4px 15px rgba(56,161,105,0.3);
         }
+        button[type=submit]:hover, .send-btn:hover { transform: translateY(-2px); }
 
-        input::placeholder, textarea::placeholder {
-            color: #6e7681;
+        #statusMandat, #statusWniosek, #statusRaport {
+            margin-top:12px; font-weight:600; text-align:center; min-height:1.5em; padding:8px; border-radius:8px;
         }
+        .status-success { background-color:#28a74533; color:#28a745; }
+        .status-error   { background-color:#dc354533; color:#dc3545; }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        button[type=submit] {
-            margin-top: 30px;
-            background: linear-gradient(90deg, #38a169, #2f855a);
-            border: none;
-            padding: 15px 30px;
-            color: white;
-            font-weight: 700;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.1em;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
-            transition: all 0.3s ease;
-        }
+        .checkbox-grid { display:flex; gap:12px; flex-wrap:wrap; }
+        .checkbox-grid label { font-weight:500; color:#c9d1d9; display:flex; align-items:center; gap:8px; }
+        .small-note { font-size:0.9em; color:#6e7681; margin-top:6px; }
 
-        button[type=submit]:hover {
-            background: linear-gradient(90deg, #2f855a, #276749);
-            box-shadow: 0 6px 20px rgba(56, 161, 105, 0.6);
-            transform: translateY(-2px);
-        }
-
-        #statusMandat, #statusWniosek {
-            margin-top: 20px;
-            font-weight: 600;
-            text-align: center;
-            min-height: 1.5em;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        .status-success {
-            background-color: #28a74533;
-            color: #28a745;
-        }
-        
-        .status-error {
-            background-color: #dc354533;
-            color: #dc3545;
-        }
-
-        .line-field {
-            margin: 25px 0;
-            font-weight: 600;
-            color: #444c56;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            user-select: none;
-        }
-
-        .small-note {
-            font-size: 0.9em;
-            color: #6e7681;
-            margin-top: -5px;
-            margin-bottom: 15px;
-        }
-        
-        select option {
-            background-color: #21262d;
-            color: #c9d1d9;
+        /* Responsive */
+        @media (max-width:740px) {
+            .row { flex-direction:column; }
+            .container { padding:20px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Mandaty i Wnioski - Summer RP</h1>
-        
+        <h1>Mobilny Terminal Policyjny - KWP GDAŃSK</h1>
+        <h2>Summer RP</h2>
+
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="showTab('mandat')">Wystaw Mandat</button>
-            <button class="tab-btn" onclick="showTab('wniosek')">Wniosek do sądu</button>
+            <button class="tab-btn active" onclick="showTab('mandat', event)">Wystaw Mandat</button>
+            <button class="tab-btn" onclick="showTab('wniosek', event)">Wniosek do sądu</button>
+            <button class="tab-btn" onclick="showTab('raporty', event)">Raporty (Patrol / Interwencja)</button>
         </div>
 
+        <!-- MANDAT -->
         <div id="mandat" class="tab active">
             <form id="mandatForm">
                 <label>Imię i nazwisko ukaranego:</label>
@@ -200,14 +128,19 @@
                 <label>Nick (OOC):</label>
                 <input type="text" id="nick" required placeholder="np. Malina#1122" />
 
-                <label>Data i godzina wystawienia:</label>
-                <input type="datetime-local" id="dataWystawienia" required />
-
-                <label>Godzina zdarzenia:</label>
-                <input type="time" id="godzinaZdarzenia" required />
+                <div class="row">
+                    <div>
+                        <label>Data i godzina wystawienia:</label>
+                        <input type="datetime-local" id="dataWystawienia" required />
+                    </div>
+                    <div>
+                        <label>Godzina zdarzenia:</label>
+                        <input type="time" id="godzinaZdarzenia" required />
+                    </div>
+                </div>
 
                 <label>Miejsce zdarzenia:</label>
-                <input type="text" id="miejsce" required placeholder="np. Olsztyn, ul. Warszawska" />
+                <input type="text" id="miejsce" required placeholder="np. Gdańsk, ul. Długa" />
 
                 <label>Przyczyna nałożenia mandatu:</label>
                 <select id="przyczyna" required onchange="toggleInnePole()">
@@ -224,11 +157,16 @@
                     <input type="text" id="innePrzyczyna" placeholder="Napisz dokładną przyczynę" />
                 </div>
 
-                <label>Kwota mandatu (PLN):</label>
-                <input type="number" id="kwota" min="1" required placeholder="np. 5000" />
-
-                <label>Punkty karne:</label>
-                <input type="number" id="punkty" min="0" required placeholder="np. 10" />
+                <div class="row">
+                    <div>
+                        <label>Kwota mandatu (PLN):</label>
+                        <input type="number" id="kwota" min="1" required placeholder="np. 5000" />
+                    </div>
+                    <div>
+                        <label>Punkty karne:</label>
+                        <input type="number" id="punkty" min="0" required placeholder="np. 10" />
+                    </div>
+                </div>
 
                 <label>Typ pojazdu:</label>
                 <input type="text" id="pojazd" placeholder="np. Mini van" required />
@@ -241,6 +179,7 @@
             <div id="statusMandat"></div>
         </div>
 
+        <!-- WNIOSEK -->
         <div id="wniosek" class="tab">
             <form id="wniosekForm">
                 <label>Imię i nazwisko ukaranego:</label>
@@ -249,11 +188,16 @@
                 <label>Nick (OOC):</label>
                 <input type="text" id="nickWniosek" placeholder="np. Malina#1122" />
 
-                <label>Data wystawienia mandatu:</label>
-                <input type="date" id="dataMandatu" />
-
-                <label>Typ mandatu / wykroczenia:</label>
-                <input type="text" id="typMandatu" placeholder="np. Przekroczenie prędkości" />
+                <div class="row">
+                    <div>
+                        <label>Data wystawienia mandatu:</label>
+                        <input type="date" id="dataMandatu" />
+                    </div>
+                    <div>
+                        <label>Typ mandatu / wykroczenia:</label>
+                        <input type="text" id="typMandatu" placeholder="np. Przekroczenie prędkości" />
+                    </div>
+                </div>
 
                 <label>Kwota mandatu (PLN):</label>
                 <input type="number" id="kwotaMandatu" min="0" placeholder="np. 5000" />
@@ -265,56 +209,184 @@
             </form>
             <div id="statusWniosek"></div>
         </div>
+
+        <!-- RAPORTY -->
+        <div id="raporty" class="tab">
+            <form id="raportForm">
+                <label>Rodzaj raportu:</label>
+                <select id="rodzajRaportu" onchange="toggleRaportType()">
+                    <option value="patrol">📋 RAPORT ZE SŁUŻBY / PATROLU</option>
+                    <option value="interwencja">📄 RAPORT Z INTERWENCJI</option>
+                </select>
+
+                <!-- POLA DLA PATROLU -->
+                <div id="patrolFields">
+                    <label>Komenda:</label>
+                    <input type="text" id="komendaPatrol" value="Komenda Wojewódzka Policji w Gdańsku – Summer RP" />
+
+                    <div class="row">
+                        <div>
+                            <label>Data służby:</label>
+                            <input type="date" id="dataSluzby" />
+                        </div>
+                        <div>
+                            <label>Czas trwania służby:</label>
+                            <input type="text" id="czasTrwania" placeholder="np. 18:00–20:00" />
+                        </div>
+                    </div>
+
+                    <label>Skład patrolu (oddzielone nową linią):</label>
+                    <textarea id="skladPatrolu" placeholder="sierż. szt. Marek Nowak\nmł. asp. Anna Jankowska"></textarea>
+
+                    <label>Rodzaj patrolu:</label>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox" name="rodzaj" value="Zmotoryzowany" checked> Zmotoryzowany</label>
+                        <label><input type="checkbox" name="rodzaj" value="Pieszy"> Pieszy</label>
+                        <label><input type="checkbox" name="rodzaj" value="Prewencyjny"> Prewencyjny</label>
+                        <label><input type="checkbox" name="rodzaj" value="Kryminalny"> Kryminalny</label>
+                        <label><input type="checkbox" name="rodzaj" value="Inny"> Inny</label>
+                    </div>
+                    <input type="text" id="rodzajInny" placeholder="Jeżeli 'Inny' – wpisz opis" style="margin-top:8px;" />
+
+                    <label>Obszar patrolu:</label>
+                    <input type="text" id="obszarPatrolu" placeholder="np. Gdańsk – Śródmieście, Wrzeszcz" />
+
+                    <label>Wykonane czynności (krótko, każdy w nowej linii):</label>
+                    <textarea id="czynnosciPatrolu" placeholder="Kontrola 5 pojazdów\nSprawdzenie 3 osób w systemie KSIP\nUdzielenie pomocy..."></textarea>
+
+                    <label>Incydenty i interwencje:</label>
+                    <textarea id="incydentyPatrolu" placeholder='Jeśli były – krótki opis lub "Brak"'></textarea>
+
+                    <label>Uwagi własne:</label>
+                    <textarea id="uwagiPatrolu" placeholder="Np. Patrol przebiegł spokojnie..."></textarea>
+
+                    <label>Raport sporządził (stopień + imię i nazwisko):</label>
+                    <input type="text" id="sporadzilPatrol" placeholder="np. sierż. szt. Marek Nowak" />
+
+                    <div class="row">
+                        <div>
+                            <label>Data sporządzenia:</label>
+                            <input type="date" id="dataSporzadzeniaPatrol" />
+                        </div>
+                        <div>
+                            <label>&nbsp;</label>
+                            <button type="button" class="send-btn" onclick="sendPatrolReport()">Wyślij raport patrolu</button>
+                        </div>
+                    </div>
+                    <div id="statusRaportPatrol"></div>
+                </div>
+
+                <!-- POLA DLA INTERWENCJI -->
+                <div id="interwencjaFields" style="display:none;">
+                    <label>Komenda:</label>
+                    <input type="text" id="komendaInterw" value="Komenda Wojewódzka Policji w Gdańsku – Summer RP" />
+
+                    <div class="row">
+                        <div>
+                            <label>Data i godzina interwencji:</label>
+                            <input type="datetime-local" id="dataCzasInterw" />
+                        </div>
+                        <div>
+                            <label>Miejsce zdarzenia:</label>
+                            <input type="text" id="miejsceInterw" placeholder="np. Stacja paliw – ul. Leśna 13, Gdańsk" />
+                        </div>
+                    </div>
+
+                    <label>Zgłoszenie:</label>
+                    <input type="text" id="zgłoszenieInterw" placeholder="np. Podejrzenie napadu z bronią – zgłoszenie przez 112" />
+
+                    <label>Funkcjonariusze uczestniczący (oddzielone nową linią):</label>
+                    <textarea id="funkcjonariuszeInterw" placeholder="st. post. Jan Kamiński\nsierż. szt. Marek Nowak"></textarea>
+
+                    <label>Opis przebiegu interwencji:</label>
+                    <textarea id="opisInterw" placeholder="Np. Po przybyciu na miejsce..."></textarea>
+
+                    <label>Zatrzymane osoby (jeśli dotyczy):</label>
+                    <textarea id="zatrzymaneOsoby" placeholder="Imię i Nazwisko – powód zatrzymania\nPrzewieziono na KWP..."></textarea>
+
+                    <label>Dowody zabezpieczone (każdy w nowej linii):</label>
+                    <textarea id="dowodyInterw" placeholder="Pistolet Glock 17\nGotówka 12 000 PLN\nNagranie z monitoringu"></textarea>
+
+                    <label>Uwagi końcowe:</label>
+                    <textarea id="uwagiInterw" placeholder="Np. Sprawa przekazana do WDŚ..."></textarea>
+
+                    <label>Raport sporządził (stopień + imię i nazwisko):</label>
+                    <input type="text" id="sporadzilInterw" placeholder="np. sierż. szt. Marek Nowak" />
+
+                    <div class="row">
+                        <div>
+                            <label>Data sporządzenia:</label>
+                            <input type="date" id="dataSporzadzeniaInterw" />
+                        </div>
+                        <div>
+                            <label>&nbsp;</label>
+                            <button type="button" class="send-btn" onclick="sendInterwReport()">Wyślij raport interwencji</button>
+                        </div>
+                    </div>
+                    <div id="statusRaportInterw"></div>
+                </div>
+
+                <div id="statusRaport" style="margin-top:14px;"></div>
+            </form>
+        </div>
     </div>
+
     <script>
-        // Nowe webhooki od Ciebie:
+        // Webhooky
         const webhookMandat = 'https://discord.com/api/webhooks/1403683432227410001/aSOQ2awWpU5bBgGsgo1E0k_kkBIGU6bwOUEBsuSXgaVc-vp3-cmAlIWk5wHSkkdLheNg';
         const webhookSadDecyzja = 'https://discord.com/api/webhooks/1403681144029057074/qWog2W1UxsgQp1P_IzmI0sqjmXtC7ZD4Fw3XsGhLX39AFaW31cyTC1Y0bNh6AfeqXy8c';
-        const webhookWniosekSad = 'https://discord.com/api/webhooks/1403683863867166820/JQcyZ777-KCpdze6TrnbkHyz5vpFrqD7H1QnFAmnOoXiW_Cq_nLdmKODlzioiI-YHePO';
+        const webhookWniosekSad = 'https://discord.com/api/webhooks/1412788434648694804/n60lhu1ldk_rwms5f7TCE5XE3JO8XM-TZ4zReqem8dKynqoohH5_e4HFuInINYiVDCnd';
 
-        // Przełączanie zakładek
-        const tabs = document.querySelectorAll('.tab');
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        function showTab(id) {
+        // Webhook dla raportów (podany)
+        const webhookRaport = 'https://discord.com/api/webhooks/1434821037069045853/0iztVif0V05Up-p8MbO33dgoDeUzDeeOBaU0nQGHZpnuNp81IhfOfSYsxzQ_4Wg4Zgew';
+
+        // Funkcje pomocnicze
+        function showTab(id, event) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabBtns = document.querySelectorAll('.tab-btn');
             tabs.forEach(t => t.classList.remove('active'));
             tabBtns.forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
         }
 
-        // Pokaż/ukryj pole "inne przyczyna"
         function toggleInnePole() {
             const przyczyna = document.getElementById('przyczyna').value;
             document.getElementById('innePrzyczynaDiv').style.display = przyczyna === 'inne' ? 'block' : 'none';
         }
 
-        // Funkcja wysyłająca embed do webhooka Discord
-        async function wyslijWebhook(url, embed) {
-            const body = JSON.stringify({ embeds: [embed] });
+        function toggleRaportType() {
+            const type = document.getElementById('rodzajRaportu').value;
+            document.getElementById('patrolFields').style.display = type === 'patrol' ? 'block' : 'none';
+            document.getElementById('interwencjaFields').style.display = type === 'interwencja' ? 'block' : 'none';
+        }
+
+        async function wyslijWebhook(url, embed, content = null) {
+            const bodyObj = content ? { content: content, embeds: [embed] } : { embeds: [embed] };
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: body
+                body: JSON.stringify(bodyObj)
             });
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error(`Błąd sieci: ${response.status} ${response.statusText}`);
             }
-        }
-        
-        function setStatus(elementId, message, isSuccess) {
-            const statusElement = document.getElementById(elementId);
-            statusElement.textContent = message;
-            statusElement.classList.remove('status-success', 'status-error');
-            if (isSuccess !== null) {
-                statusElement.classList.add(isSuccess ? 'status-success' : 'status-error');
-            }
+            return response;
         }
 
-        // Formularz mandatu
+        function setStatus(elementId, message, isSuccess) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.textContent = message;
+            el.classList.remove('status-success', 'status-error');
+            if (isSuccess === true) el.classList.add('status-success');
+            if (isSuccess === false) el.classList.add('status-error');
+        }
+
+        // MANDAT
         document.getElementById('mandatForm').addEventListener('submit', async e => {
             e.preventDefault();
             setStatus('statusMandat', 'Wysyłam mandat...', null);
-
             try {
                 const imie = document.getElementById('imie').value.trim();
                 const nick = document.getElementById('nick').value.trim();
@@ -336,8 +408,8 @@
                 const funkcjonariusz = document.getElementById('funkcjonariusz').value.trim();
 
                 const dataObj = new Date(dataWystawieniaRaw);
-                const dataStr = dataObj.toLocaleDateString('pl-PL') + ', godz. ' + dataObj.toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'});
-                const godzinaZdarzenia = godzinaZdarzeniaRaw;
+                const dataStr = isNaN(dataObj) ? '—' : (dataObj.toLocaleDateString('pl-PL') + ', godz. ' + dataObj.toLocaleTimeString('pl-PL', {hour:'2-digit',minute:'2-digit'}));
+                const godzinaZdarzenia = godzinaZdarzeniaRaw || '—';
 
                 const embed = {
                     title: ":money_with_wings: MANDAT KARNY",
@@ -350,7 +422,7 @@
                         { name: '\u200b', value: `**Wymiar kary**\n> Kwota mandatu: **${kwota.toLocaleString()} PLN**\n> Punkty karne: **${punkty} pkt**` },
                         { name: '\u200b', value: `**Dane pojazdu**\n> Typ: ${pojazd}` },
                         { name: '\u200b', value: `**Funkcjonariusz wystawiający**\n> **${funkcjonariusz}**` },
-                        { name: ':warning: Informacja', value: 'Mandat należy uiścić w terminie 7 dni od daty wystawienia. Brak zapłaty skutkuje wszczęciem postępowania.' },
+                        { name: ':warning: Informacja', value: 'Mandat należy uiścić w terminie 7 dni. Brak zapłaty skutkuje wszczęciem postępowania.' },
                     ],
                     footer: { text: "Komenda Wojewódzka Policji w Gdańsku – Summer RP" },
                     timestamp: new Date().toISOString(),
@@ -366,11 +438,10 @@
             }
         });
 
-        // Formularz wniosku do sądu
+        // WNIOSEK
         document.getElementById('wniosekForm').addEventListener('submit', async e => {
             e.preventDefault();
             setStatus('statusWniosek', 'Wysyłam wniosek do sądu...', null);
-
             try {
                 const ukarany = document.getElementById('ukarany').value.trim();
                 const nick = document.getElementById('nickWniosek').value.trim() || '—';
@@ -392,63 +463,157 @@
                         { name: '\u200b', value: `**Dane osoby ukaranej**\n> Imię i nazwisko: **${ukarany}**\n> Nick (OOC): ${nick}` },
                         { name: '\u200b', value: `**Szczegóły mandatu**\n> Data wystawienia: **${dataMandatu}**\n> Typ mandatu: **${typMandatu}**\n> Kwota mandatu: **${kwotaMandatu === '—' ? '—' : `${kwotaMandatu.toLocaleString()} PLN`}**` },
                         { name: '\u200b', value: `**Opis sprawy / powód wniosku**\n> ${powod}` },
-                        { name: '\u200b', value: '\u200b', inline: false },
-                        { name: ':information_source: Informacja', value: 'Decyzja sądu zostanie wysłana na kanał <#1398630915663466562>', inline: false }
+                        { name: ':information_source: Informacja', value: 'Decyzja sądu zostanie wysłana na odpowiedni kanał Discord.' }
                     ],
                     footer: { text: "Komenda Wojewódzka Policji w Gdańsku – Summer RP" },
                     timestamp: new Date().toISOString(),
                 };
 
                 await wyslijWebhook(webhookWniosekSad, embed);
-                setStatus('statusWniosek', 'Wniosek wysłany! Czekam na decyzję sądu...', true);
+                setStatus('statusWniosek', 'Wniosek wysłany! Oczekiwanie na decyzję sądu...', true);
                 e.target.reset();
-
-                setTimeout(async () => {
-                    try {
-                        const decyzje = [
-                            {
-                                status: 'Wniosek rozpatrzony pozytywnie.',
-                                komentarz: 'Mandat został anulowany. Proszę o zaprzestanie dalszych naruszeń prawa.',
-                                kolor: 0x059669
-                            },
-                            {
-                                status: 'Wniosek odrzucony.',
-                                komentarz: 'Mandat pozostaje ważny. Proszę uiścić kwotę w terminie.',
-                                kolor: 0xdc143c
-                            },
-                            {
-                                status: 'Wniosek rozpatrzony częściowo pozytywnie.',
-                                komentarz: 'Kwota mandatu została zmniejszona o 50%.',
-                                kolor: 0xf59e0b
-                            }
-                        ];
-
-                        const decyzja = decyzje[Math.floor(Math.random() * decyzje.length)];
-
-                        const decyzjaEmbed = {
-                            title: ":hammer: DECYZJA SĄDU",
-                            description: `Wniosek dotyczący **${ukarany}** został rozpatrzony.`,
-                            color: decyzja.kolor,
-                            fields: [
-                                { name: 'Status decyzji:', value: decyzja.status },
-                                { name: 'Komentarz:', value: decyzja.komentarz }
-                            ],
-                            footer: { text: "Komenda Wojewódzka Policji w Gdańsku – Summer RP" },
-                            timestamp: new Date().toISOString(),
-                        };
-
-                        await wyslijWebhook(webhookSadDecyzja, decyzjaEmbed);
-                        // Status na stronie nie jest tutaj zmieniany, bo decyzja idzie na Discord, nie do użytkownika
-                    } catch(err) {
-                        console.error('Błąd podczas wysyłania decyzji sądu:', err);
-                    }
-                }, 2000);
 
             } catch(err) {
                 setStatus('statusWniosek', 'Błąd podczas wysyłania wniosku: ' + err.message, false);
             }
         });
+
+        // RAPORT - PATROL
+        async function sendPatrolReport() {
+            try {
+                setStatus('statusRaportPatrol', 'Wysyłam raport patrolu...', null);
+
+                const komenda = document.getElementById('komendaPatrol').value || 'Komenda Wojewódzka Policji w Gdańsku – Summer RP';
+                const dataSluzby = document.getElementById('dataSluzby').value || '—';
+                const czasTrwania = document.getElementById('czasTrwania').value || '—';
+                const sklad = document.getElementById('skladPatrolu').value.trim() || '—';
+                
+                // rodzaj patrolu - zebrać zaznaczone
+                const rodzajElems = document.querySelectorAll('#patrolFields input[name="rodzaj"]:checked');
+                let rodzaje = Array.from(rodzajElems).map(el => el.value);
+                const rodzajInny = document.getElementById('rodzajInny').value.trim();
+                if (rodzaje.includes('Inny') && rodzajInny) {
+                    // zamień 'Inny' na konkret
+                    rodzaje = rodzaje.map(r => r === 'Inny' ? `Inny: ${rodzajInny}` : r);
+                }
+                if (rodzaje.length === 0) rodzaje = ['—'];
+
+                const obszar = document.getElementById('obszarPatrolu').value.trim() || '—';
+                const czynnosci = document.getElementById('czynnosciPatrolu').value.trim() || '—';
+                const incydenty = document.getElementById('incydentyPatrolu').value.trim() || 'Brak';
+                const uwagi = document.getElementById('uwagiPatrolu').value.trim() || '—';
+                const sporadzil = document.getElementById('sporadzilPatrol').value.trim() || '—';
+                const dataSporz = document.getElementById('dataSporzadzeniaPatrol').value || (new Date()).toLocaleDateString('pl-PL');
+
+                // zbuduj tekst embedu zgodnie ze wzorem
+                const embed = {
+                    title: "📋 RAPORT ZE SŁUŻBY / PATROLU",
+                    description: `**${komenda}**`,
+                    color: 3447003,
+                    fields: [
+                        { name: 'Data służby', value: dataSluzby, inline: true },
+                        { name: 'Czas trwania służby', value: czasTrwania, inline: true },
+                        { name: '\u200b', value: `**Skład patrolu**\n${escapeNewlinesAsQuote(sklad)}` },
+                        { name: 'Rodzaj patrolu', value: rodzaje.join(', ') },
+                        { name: 'Obszar patrolu', value: obszar },
+                        { name: 'Wykonane czynności', value: escapeNewlinesAsList(czynnosci) },
+                        { name: 'Incydenty i interwencje', value: incydenty },
+                        { name: 'Uwagi własne', value: uwagi },
+                        { name: 'Raport sporządził', value: sporadzil },
+                        { name: 'Data sporządzenia', value: dataSporz }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: { text: komenda }
+                };
+
+                await wyslijWebhook(webhookRaport, embed, "**Nowy raport patrolu**");
+                setStatus('statusRaportPatrol', 'Raport patrolu wysłany pomyślnie!', true);
+                // wyczyszczenie pól
+                document.getElementById('skladPatrolu').value = '';
+                document.querySelectorAll('#patrolFields input[name="rodzaj"]').forEach(i => i.checked = false);
+                document.getElementById('rodzajInny').value = '';
+                document.getElementById('obszarPatrolu').value = '';
+                document.getElementById('czynnosciPatrolu').value = '';
+                document.getElementById('incydentyPatrolu').value = '';
+                document.getElementById('uwagiPatrolu').value = '';
+                document.getElementById('sporadzilPatrol').value = '';
+                document.getElementById('dataSporzadzeniaPatrol').value = '';
+
+            } catch(err) {
+                setStatus('statusRaportPatrol', 'Błąd podczas wysyłania raportu patrolu: ' + err.message, false);
+            }
+        }
+
+        // RAPORT - INTERWENCJA
+        async function sendInterwReport() {
+            try {
+                setStatus('statusRaportInterw', 'Wysyłam raport interwencji...', null);
+
+                const komenda = document.getElementById('komendaInterw').value || 'Komenda Wojewódzka Policji w Gdańsku – Summer RP';
+                const dataCzas = document.getElementById('dataCzasInterw').value;
+                const dataCzasStr = dataCzas ? (new Date(dataCzas)).toLocaleString('pl-PL') : '—';
+                const miejsce = document.getElementById('miejsceInterw').value.trim() || '—';
+                const zgloszenie = document.getElementById('zgłoszenieInterw').value.trim() || '—';
+                const funkcjonariusze = document.getElementById('funkcjonariuszeInterw').value.trim() || '—';
+                const opis = document.getElementById('opisInterw').value.trim() || '—';
+                const zatrzymane = document.getElementById('zatrzymaneOsoby').value.trim() || 'Brak';
+                const dowody = document.getElementById('dowodyInterw').value.trim() || 'Brak';
+                const uwagi = document.getElementById('uwagiInterw').value.trim() || '—';
+                const sporadzil = document.getElementById('sporadzilInterw').value.trim() || '—';
+                const dataSporz = document.getElementById('dataSporzadzeniaInterw').value || (new Date()).toLocaleDateString('pl-PL');
+
+                const embed = {
+                    title: "📄 RAPORT Z INTERWENCJI",
+                    description: `**${komenda}**`,
+                    color: 15105570,
+                    fields: [
+                        { name: 'Data i godzina interwencji', value: dataCzasStr },
+                        { name: 'Miejsce zdarzenia', value: miejsce },
+                        { name: 'Zgłoszenie', value: zgloszenie },
+                        { name: 'Funkcjonariusze uczestniczący', value: escapeNewlinesAsQuote(funkcjonariusze) },
+                        { name: 'Opis przebiegu interwencji', value: opis },
+                        { name: 'Zatrzymane osoby', value: zatrzymane },
+                        { name: 'Dowody zabezpieczone', value: escapeNewlinesAsList(dowody) },
+                        { name: 'Uwagi końcowe', value: uwagi },
+                        { name: 'Raport sporządził', value: sporadzil },
+                        { name: 'Data sporządzenia raportu', value: dataSporz }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: { text: komenda }
+                };
+
+                await wyslijWebhook(webhookRaport, embed, "**Nowy raport z interwencji**");
+                setStatus('statusRaportInterw', 'Raport interwencji wysłany pomyślnie!', true);
+
+                // wyczyszczenie
+                document.getElementById('miejsceInterw').value = '';
+                document.getElementById('zgłoszenieInterw').value = '';
+                document.getElementById('funkcjonariuszeInterw').value = '';
+                document.getElementById('opisInterw').value = '';
+                document.getElementById('zatrzymaneOsoby').value = '';
+                document.getElementById('dowodyInterw').value = '';
+                document.getElementById('uwagiInterw').value = '';
+                document.getElementById('sporadzilInterw').value = '';
+                document.getElementById('dataSporzadzeniaInterw').value = '';
+
+            } catch(err) {
+                setStatus('statusRaportInterw', 'Błąd podczas wysyłania raportu interwencji: ' + err.message, false);
+            }
+        }
+
+        // Pomocnicze formatowanie:
+        function escapeNewlinesAsQuote(text) {
+            if (!text) return '—';
+            // zamień nowe linie na blok cytatu w embed (używamy > przed linią)
+            return text.split('\n').map(line => `> ${line}`).join('\n');
+        }
+        function escapeNewlinesAsList(text) {
+            if (!text) return '—';
+            return text.split('\n').map(line => `• ${line}`).join('\n');
+        }
+
+        // Pre-init
+        toggleRaportType();
     </script>
 </body>
 </html>
-
