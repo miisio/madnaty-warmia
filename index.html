@@ -91,7 +91,7 @@
         }
         button[type=submit]:hover, .send-btn:hover { transform: translateY(-2px); }
 
-        #statusMandat, #statusWniosek, #statusRaport {
+        #statusMandat, #statusWniosek, #statusRaport, #statusZatrzymanie {
             margin-top:12px; font-weight:600; text-align:center; min-height:1.5em; padding:8px; border-radius:8px;
         }
         .status-success { background-color:#28a74533; color:#28a745; }
@@ -117,9 +117,9 @@
             <button class="tab-btn active" onclick="showTab('mandat', event)">Wystaw Mandat</button>
             <button class="tab-btn" onclick="showTab('wniosek', event)">Wniosek do sądu</button>
             <button class="tab-btn" onclick="showTab('raporty', event)">Raporty (Patrol / Interwencja)</button>
+            <button class="tab-btn" onclick="showTab('zatrzymanie', event)">Protokół Zatrzymania</button>
         </div>
 
-        <!-- MANDAT -->
         <div id="mandat" class="tab active">
             <form id="mandatForm">
                 <label>Imię i nazwisko ukaranego:</label>
@@ -179,7 +179,6 @@
             <div id="statusMandat"></div>
         </div>
 
-        <!-- WNIOSEK -->
         <div id="wniosek" class="tab">
             <form id="wniosekForm">
                 <label>Imię i nazwisko ukaranego:</label>
@@ -210,7 +209,6 @@
             <div id="statusWniosek"></div>
         </div>
 
-        <!-- RAPORTY -->
         <div id="raporty" class="tab">
             <form id="raportForm">
                 <label>Rodzaj raportu:</label>
@@ -219,7 +217,6 @@
                     <option value="interwencja">📄 RAPORT Z INTERWENCJI</option>
                 </select>
 
-                <!-- POLA DLA PATROLU -->
                 <div id="patrolFields">
                     <label>Komenda:</label>
                     <input type="text" id="komendaPatrol" value="Komenda Wojewódzka Policji w Gdańsku – Summer RP" />
@@ -276,7 +273,6 @@
                     <div id="statusRaportPatrol"></div>
                 </div>
 
-                <!-- POLA DLA INTERWENCJI -->
                 <div id="interwencjaFields" style="display:none;">
                     <label>Komenda:</label>
                     <input type="text" id="komendaInterw" value="Komenda Wojewódzka Policji w Gdańsku – Summer RP" />
@@ -329,15 +325,60 @@
                 <div id="statusRaport" style="margin-top:14px;"></div>
             </form>
         </div>
+
+        <div id="zatrzymanie" class="tab">
+            <form id="zatrzymanieForm">
+                <label>Data i godzina zatrzymania:</label>
+                <input type="datetime-local" id="dataCzasZatrzymania" required />
+
+                <div class="row">
+                    <div>
+                        <label>Funkcjonariusz (Stopień + Imię i Nazwisko):</label>
+                        <input type="text" id="funkcjonariuszZatrzymanie" required placeholder="np. sierż. sztab. Marek Nowak" />
+                    </div>
+                    <div>
+                        <label>Nick Funkcjonariusza (OOC):</label>
+                        <input type="text" id="nickFuncZatrzymanie" required placeholder="np. Funkcjonariusz#1234" />
+                    </div>
+                </div>
+
+                <label>Imię i Nazwisko osoby zatrzymanej (IC):</label>
+                <input type="text" id="osobaZatrzymanaIC" required placeholder="np. Tomasz Malinowski" />
+
+                <label>ID / Numer dowodu osoby zatrzymanej (opcjonalnie):</label>
+                <input type="text" id="idDowodZatrzymanie" placeholder="np. 90021204856" />
+
+                <label>Miejsce zatrzymania:</label>
+                <input type="text" id="miejsceZatrzymania" required placeholder="np. Gdańsk, ul. Długa 12, przed budynkiem banku" />
+
+                <label>Powód zatrzymania:</label>
+                <textarea id="powodZatrzymania" required placeholder="np. Ucieczka przed kontrolą, posiadanie nielegalnej broni, pobicie, itp."></textarea>
+
+                <label>Zabezpieczone przedmioty (jeśli dotyczy, każdy w nowej linii):</label>
+                <textarea id="zabezpieczonePrzedmioty" placeholder="Pistolet Glock 17\Gotówka 12 000 PLN\Prawo jazdy z fałszywymi danymi"></textarea>
+
+                <label>Czas trwania zatrzymania:</label>
+                <input type="text" id="czasTrwaniaZatrzymania" required placeholder="np. od 22:15 do 23:05 – 50 minut" />
+
+                <label>Uwagi końcowe (zachowanie, adwokat, itp.):</label>
+                <textarea id="uwagiZatrzymanie" placeholder="Osoba zatrzymana nie stawiała oporu. Skontaktowano się z adwokatem."></textarea>
+
+                <label>Data sporządzenia protokołu:</label>
+                <input type="date" id="dataSporzadzeniaZatrzymania" required />
+
+                <button type="button" class="send-btn" onclick="sendZatrzymanieProtocol()">Wyślij Protokół Zatrzymania</button>
+            </form>
+            <div id="statusZatrzymanie"></div>
+        </div>
+
     </div>
 
     <script>
         // Webhooky
         const webhookMandat = 'https://discord.com/api/webhooks/1403683432227410001/aSOQ2awWpU5bBgGsgo1E0k_kkBIGU6bwOUEBsuSXgaVc-vp3-cmAlIWk5wHSkkdLheNg';
         const webhookSadDecyzja = 'https://discord.com/api/webhooks/1403681144029057074/qWog2W1UxsgQp1P_IzmI0sqjmXtC7ZD4Fw3XsGhLX39AFaW31cyTC1Y0bNh6AfeqXy8c';
-        const webhookWniosekSad = 'https://discord.com/api/webhooks/1412788434648694804/n60lhu1ldk_rwms5f7TCE5XE3JO8XM-TZ4zReqem8dKynqoohH5_e4HFuInINYiVDCnd';
-
-        // Webhook dla raportów (podany)
+        const webhookWniosekSad = 'https://discord.com/api/webhooks/1412788434648694804/n60lhu1ldk_rwms5f7TCE5XE3JO8XM-TZ4zReqem8dKynqoohH5_e4HFuLpINYiVDCnd';
+        // Webhook dla raportów i protokołu zatrzymania
         const webhookRaport = 'https://discord.com/api/webhooks/1434821037069045853/0iztVif0V05Up-p8MbO33dgoDeUzDeeOBaU0nQGHZpnuNp81IhfOfSYsxzQ_4Wg4Zgew';
 
         // Funkcje pomocnicze
@@ -382,6 +423,17 @@
             if (isSuccess === true) el.classList.add('status-success');
             if (isSuccess === false) el.classList.add('status-error');
         }
+
+        function escapeNewlinesAsQuote(text) {
+            if (!text) return '—';
+            return text.split('\n').map(line => `> ${line}`).join('\n');
+        }
+        function escapeNewlinesAsList(text) {
+            if (!text) return '—';
+            return text.split('\n').map(line => `• ${line}`).join('\n');
+        }
+
+        // --- GŁÓWNA LOGIKA DLA SEKCJI ---
 
         // MANDAT
         document.getElementById('mandatForm').addEventListener('submit', async e => {
@@ -528,6 +580,7 @@
 
                 await wyslijWebhook(webhookRaport, embed, "**Nowy raport patrolu**");
                 setStatus('statusRaportPatrol', 'Raport patrolu wysłany pomyślnie!', true);
+                
                 // wyczyszczenie pól
                 document.getElementById('skladPatrolu').value = '';
                 document.querySelectorAll('#patrolFields input[name="rodzaj"]').forEach(i => i.checked = false);
@@ -601,15 +654,61 @@
             }
         }
 
-        // Pomocnicze formatowanie:
-        function escapeNewlinesAsQuote(text) {
-            if (!text) return '—';
-            // zamień nowe linie na blok cytatu w embed (używamy > przed linią)
-            return text.split('\n').map(line => `> ${line}`).join('\n');
-        }
-        function escapeNewlinesAsList(text) {
-            if (!text) return '—';
-            return text.split('\n').map(line => `• ${line}`).join('\n');
+        // PROTOKÓŁ ZATRZYMANIA (NOWA FUNKCJA)
+        async function sendZatrzymanieProtocol() {
+            try {
+                setStatus('statusZatrzymanie', 'Wysyłam protokół zatrzymania...', null);
+
+                const dataCzasZatrzymaniaRaw = document.getElementById('dataCzasZatrzymania').value;
+                const dataCzasZatrzymaniaStr = dataCzasZatrzymaniaRaw ? (new Date(dataCzasZatrzymaniaRaw)).toLocaleString('pl-PL') : '—';
+                
+                const funkcjonariusz = document.getElementById('funkcjonariuszZatrzymanie').value.trim() || '—';
+                const nickFunc = document.getElementById('nickFuncZatrzymanie').value.trim() || '—';
+                
+                const osobaZatrzymanaIC = document.getElementById('osobaZatrzymanaIC').value.trim() || '—';
+                const idDowod = document.getElementById('idDowodZatrzymanie').value.trim() || '—';
+                
+                const miejsce = document.getElementById('miejsceZatrzymania').value.trim() || '—';
+                const powod = document.getElementById('powodZatrzymania').value.trim() || '—';
+                const zabezpieczone = document.getElementById('zabezpieczonePrzedmioty').value.trim() || 'Brak';
+                const czasTrwania = document.getElementById('czasTrwaniaZatrzymania').value.trim() || '—';
+                const uwagi = document.getElementById('uwagiZatrzymanie').value.trim() || 'Brak';
+                const dataSporz = document.getElementById('dataSporzadzeniaZatrzymania').value || (new Date()).toLocaleDateString('pl-PL');
+
+                // Weryfikacja podstawowa
+                if (!dataCzasZatrzymaniaRaw || !funkcjonariusz || !nickFunc || !osobaZatrzymanaIC || !miejsce || !powod) {
+                     setStatus('statusZatrzymanie', 'Proszę wypełnić wszystkie wymagane pola (oznaczone gwiazdką).', false);
+                    return;
+                }
+
+                const embed = {
+                    title: "🚨 PROTOKÓŁ ZATRZYMANIA",
+                    description: "**Komenda Wojewódzka Policji w Gdańsku – Summer RP**",
+                    color: 0xed6a5a, // Czerwony/pomarańczowy kolor dla zatrzymania
+                    fields: [
+                        { name: 'Data i godzina zatrzymania', value: `**${dataCzasZatrzymaniaStr}**` },
+                        { name: 'Funkcjonariusz dokonujący zatrzymania', value: `> **${funkcjonariusz}**\n> Nick OOC: ${nickFunc}` },
+                        { name: 'Dane osoby zatrzymanej', value: `> Imię i Nazwisko (IC): **${osobaZatrzymanaIC}**\n> ID / Numer dowodu: ${idDowod}` },
+                        { name: 'Miejsce zatrzymania', value: miejsce },
+                        { name: 'Powód zatrzymania', value: `**${powod}**` },
+                        { name: 'Zabezpieczone przedmioty (jeśli dotyczy)', value: escapeNewlinesAsList(zabezpieczone) },
+                        { name: 'Czas trwania zatrzymania', value: czasTrwania },
+                        { name: 'Uwagi', value: uwagi },
+                        { name: '--- Podpis funkcjonariusza (IC) ---', value: `**${funkcjonariusz}**\nData sporządzenia protokołu: **${dataSporz}**` }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: { text: "Komenda Wojewódzka Policji w Gdańsku – Summer RP" }
+                };
+
+                await wyslijWebhook(webhookRaport, embed, "**Nowy protokół zatrzymania**");
+                setStatus('statusZatrzymanie', 'Protokół zatrzymania został wysłany pomyślnie!', true);
+                
+                // Resetowanie formularza
+                document.getElementById('zatrzymanieForm').reset();
+
+            } catch(err) {
+                setStatus('statusZatrzymanie', 'Błąd podczas wysyłania protokołu zatrzymania: ' + err.message, false);
+            }
         }
 
         // Pre-init
