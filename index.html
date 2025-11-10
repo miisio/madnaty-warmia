@@ -142,20 +142,34 @@
                 <label>Miejsce zdarzenia:</label>
                 <input type="text" id="miejsce" required placeholder="np. Gdańsk, ul. Długa" />
 
-                <label>Przyczyna nałożenia mandatu:</label>
-                <select id="przyczyna" required onchange="toggleInnePole()">
-                    <option value="" disabled selected>Wybierz przyczynę</option>
-                    <option>Przekroczenie prędkości w terenie zabudowanym</option>
-                    <option>Nieprawidłowe parkowanie</option>
-                    <option>Jazda bez zapiętych pasów</option>
-                    <option>Brak ważnego ubezpieczenia</option>
-                    <option value="inne">Inne wykroczenie drogowe</option>
-                </select>
+<label>Przyczyna nałożenia mandatu:</label>
+<select id="przyczyna" required onchange="pokazPoleArtykulu()">
+    <option value="" disabled selected>Wybierz przyczynę</option>
+    <option>Wykroczenia drogowe</option>
+    <option>Wykroczenia porządkowe i administracyjne</option>
+    <option>Wykroczenia przeciwko obrotowi towarów i usług</option>
+    <option>Wykroczenia przeciwko bezpieczeństwu i porządkowi publicznemu</option>
+    <option>Inne</option>
+</select>
 
-                <div id="innePrzyczynaDiv" style="display:none;">
-                    <label>Opisz inną przyczynę:</label>
-                    <input type="text" id="innePrzyczyna" placeholder="Napisz dokładną przyczynę" />
-                </div>
+<div id="innePrzyczynaDiv" style="display:none; margin-top: 10px;">
+    <label>Podaj dokładny artykuł:</label>
+    <input type="text" id="innePrzyczyna" placeholder="Np. Art. 97 Kodeksu wykroczeń" />
+</div>
+
+<script>
+function pokazPoleArtykulu() {
+    const select = document.getElementById("przyczyna");
+    const inneDiv = document.getElementById("innePrzyczynaDiv");
+
+    // Pokaż pole po wybraniu dowolnej opcji (poza pustą)
+    if (select.value !== "") {
+        inneDiv.style.display = "block";
+    } else {
+        inneDiv.style.display = "none";
+    }
+}
+</script>
 
                 <div class="row">
                     <div>
