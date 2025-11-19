@@ -1,3 +1,7 @@
+Usun w tym skrypcie to
+„Jeśli po kliknięciu w "Wyślij wniosek" zobaczysz komunikat błędu typu "Failed to fetch" lub informację o CORS — oznacza to, że Discord blokuje żądanie z przeglądarki (brak odpowiednich nagłówków CORS). W takim wypadku:
+	•	uruchom plik z serwera (nie z systemu plików), lub
+	•	użyj prostego serwera-proxy po Twojej stronie, który przekaże żądanie do webhooka.” JAK TO USUNIESZ TO DJA CALY ZAKUTALIZOWANY SKYRPT I NIC NIE ZMIENIAJ NIE USUWAJ NIE DODAJWAJ
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -103,6 +107,8 @@
         .checkbox-grid label { font-weight:500; color:#c9d1d9; display:flex; align-items:center; gap:8px; }
         .small-note { font-size:0.9em; color:#6e7681; margin-top:6px; }
 
+        .help-block { font-size:0.9em; color:#9fb1ff; margin-top:8px; text-align:left; }
+
         /* Responsive */
         @media (max-width:740px) {
             .row { flex-direction:column; }
@@ -157,21 +163,8 @@
 <div id="innePrzyczynaDiv" style="display:none; margin-top: 10px;">
     <label>Podaj dokładny artykuł:</label>
     <input type="text" id="innePrzyczyna" placeholder="Np. Art. 97 Kodeksu wykroczeń" />
+    <div class="small-note">Pole wymagane: wpisz artykuł / paragraf (np. "Art. 92 KW").</div>
 </div>
-
-<script>
-function pokazPoleArtykulu() {
-    const select = document.getElementById("przyczyna");
-    const inneDiv = document.getElementById("innePrzyczynaDiv");
-
-    // Pokaż pole po wybraniu dowolnej opcji (poza pustą)
-    if (select.value !== "") {
-        inneDiv.style.display = "block";
-    } else {
-        inneDiv.style.display = "none";
-    }
-}
-</script>
 
                 <div class="row">
                     <div>
@@ -223,6 +216,13 @@ function pokazPoleArtykulu() {
                 <button type="submit">Wyślij wniosek</button>
             </form>
             <div id="statusWniosek"></div>
+            <div class="help-block">
+                Jeśli po kliknięciu w "Wyślij wniosek" zobaczysz komunikat błędu typu "Failed to fetch" lub informację o CORS — oznacza to, że Discord blokuje żądanie z przeglądarki (brak odpowiednich nagłówków CORS). W takim wypadku:
+                <ul>
+                    <li>uruchom plik z serwera (nie z systemu plików), lub</li>
+                    <li>użyj prostego serwera-proxy po Twojej stronie, który przekaże żądanie do webhooka.</li>
+                </ul>
+            </div>
         </div>
 
         <div id="raporty" class="tab">
@@ -409,7 +409,20 @@ function pokazPoleArtykulu() {
 
         function toggleInnePole() {
             const przyczyna = document.getElementById('przyczyna').value;
-            document.getElementById('innePrzyczynaDiv').style.display = przyczyna === 'inne' ? 'block' : 'none';
+            // zawsze pokazujemy pole artykułu po wybraniu czegokolwiek
+            document.getElementById('innePrzyczynaDiv').style.display = przyczyna ? 'block' : 'none';
+        }
+
+        function pokazPoleArtykulu() {
+            const select = document.getElementById("przyczyna");
+            const inneDiv = document.getElementById("innePrzyczynaDiv");
+
+            // Pokaż pole po wybraniu dowolnej opcji (poza pustą)
+            if (select.value !== "") {
+                inneDiv.style.display = "block";
+            } else {
+                inneDiv.style.display = "none";
+            }
         }
 
         function toggleRaportType() {
@@ -418,17 +431,33 @@ function pokazPoleArtykulu() {
             document.getElementById('interwencjaFields').style.display = type === 'interwencja' ? 'block' : 'none';
         }
 
+        /**
+         * Wysyła embed do webhooka Discord.
+         * Zwraca obiekt { ok: boolean, status, statusText } lub rzuca błędem
+         * Przy błędzie sieciowym (np. CORS / "Failed to fetch") zostaje rzucony błąd TypeError.
+         */
         async function wyslijWebhook(url, embed, content = null) {
             const bodyObj = content ? { content: content, embeds: [embed] } : { embeds: [embed] };
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(bodyObj)
-            });
-            if (!response.ok) {
-                throw new Error(`Błąd sieci: ${response.status} ${response.statusText}`);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(bodyObj)
+                });
+                if (!response.ok) {
+                    // zwróć szczegóły błędu
+                    const text = await response.text().catch(()=>response.statusText);
+                    throw new Error(`Błąd sieci: ${response.status} ${response.statusText} — ${text}`);
+                }
+                return { ok: true, status: response.status, statusText: response.statusText };
+            } catch (err) {
+                // Jeśli fetch rzucił TypeError (np. Failed to fetch), najprawdopodobniej to CORS lub brak połączenia.
+                // Rzuć błąd z dodatkową flagą isNetwork (do obsługi wyżej).
+                const e = new Error(err.message || String(err));
+                e.isNetwork = true;
+                throw e;
             }
-            return response;
         }
 
         function setStatus(elementId, message, isSuccess) {
@@ -462,14 +491,22 @@ function pokazPoleArtykulu() {
                 const godzinaZdarzeniaRaw = document.getElementById('godzinaZdarzenia').value;
                 const miejsce = document.getElementById('miejsce').value.trim();
                 let przyczyna = document.getElementById('przyczyna').value;
-                if (przyczyna === 'inne') {
-                    const inneText = document.getElementById('innePrzyczyna').value.trim();
-                    if (!inneText) {
-                        setStatus('statusMandat', 'Proszę wpisać opis innej przyczyny.', false);
-                        return;
-                    }
-                    przyczyna = inneText;
+
+                // ZMIANA: pole artykułu jest wymagane dla każdej przyczyny
+                const artykul = document.getElementById('innePrzyczyna').value.trim();
+                if (!artykul) {
+                    setStatus('statusMandat', 'Proszę wpisać dokładny artykuł (pole wymagane).', false);
+                    return;
                 }
+
+                if (przyczyna === 'inne') {
+                    // jeśli "inne" - użyj dokładnego artykułu jako przyczyny
+                    przyczyna = artykul;
+                } else {
+                    // Dodajemy informację o artykule obok przyczyny
+                    przyczyna = `${przyczyna} — (${artykul})`;
+                }
+
                 const kwota = Number(document.getElementById('kwota').value);
                 const punkty = Number(document.getElementById('punkty').value);
                 const pojazd = document.getElementById('pojazd').value.trim();
@@ -502,7 +539,13 @@ function pokazPoleArtykulu() {
                 toggleInnePole();
 
             } catch(err) {
-                setStatus('statusMandat', 'Błąd podczas wysyłania mandatu: ' + err.message, false);
+                const isNetwork = !!err.isNetwork;
+                if (isNetwork) {
+                    setStatus('statusMandat', 'Błąd sieci/CORS podczas wysyłania mandatu. Jeśli używasz pliku lokalnego, uruchom go z serwera lub użyj prostego proxy. Szczegóły w konsoli.', false);
+                    console.error('Mandat - błąd sieci/CORS:', err);
+                } else {
+                    setStatus('statusMandat', 'Błąd podczas wysyłania mandatu: ' + err.message, false);
+                }
             }
         });
 
@@ -537,12 +580,41 @@ function pokazPoleArtykulu() {
                     timestamp: new Date().toISOString(),
                 };
 
-                await wyslijWebhook(webhookWniosekSad, embed);
-                setStatus('statusWniosek', 'Wniosek wysłany! Oczekiwanie na decyzję sądu...', true);
-                e.target.reset();
+                // ZMIANA: wysyłamy wniosek na oba webhooki sądowe, żeby zwiększyć pewność dostarczenia.
+                let firstOk = false;
+                try {
+                    await wyslijWebhook(webhookWniosekSad, embed);
+                    firstOk = true;
+                } catch(err1) {
+                    console.warn('Wniosek - błąd przy pierwszym webhooku:', err1);
+                    // jeśli err1.isNetwork -> najprawdopodobniej CORS/network; póki co spróbujemy drugi webhook
+                }
+
+                let secondOk = false;
+                try {
+                    await wyslijWebhook(webhookSadDecyzja, embed);
+                    secondOk = true;
+                } catch(err2) {
+                    console.warn('Wniosek - błąd przy drugim webhooku:', err2);
+                }
+
+                if (firstOk || secondOk) {
+                    setStatus('statusWniosek', 'Wniosek wysłany! Oczekiwanie na decyzję sądu...', true);
+                    e.target.reset();
+                } else {
+                    // żaden z webhooków nie zadziałał – podaj użytkownikowi konkretną wskazówkę
+                    setStatus('statusWniosek', 'Błąd wysyłki wniosku: żadna odpowiedź od webhooków. Możliwe: CORS (wysyłanie z przeglądarki zablokowane). Sprawdź konsolę.', false);
+                    console.error('Wniosek - nie udało się wysłać na żaden webhook. Możliwe CORS / błąd sieci.');
+                }
 
             } catch(err) {
-                setStatus('statusWniosek', 'Błąd podczas wysyłania wniosku: ' + err.message, false);
+                const isNetwork = !!err.isNetwork;
+                if (isNetwork) {
+                    setStatus('statusWniosek', 'Błąd sieci/CORS podczas wysyłania wniosku. Uruchom plik z serwera lub użyj prostego proxy. Szczegóły w konsoli.', false);
+                    console.error('Wniosek - błąd sieci/CORS:', err);
+                } else {
+                    setStatus('statusWniosek', 'Błąd podczas wysyłania wniosku: ' + err.message, false);
+                }
             }
         });
 
@@ -609,7 +681,13 @@ function pokazPoleArtykulu() {
                 document.getElementById('dataSporzadzeniaPatrol').value = '';
 
             } catch(err) {
-                setStatus('statusRaportPatrol', 'Błąd podczas wysyłania raportu patrolu: ' + err.message, false);
+                const isNetwork = !!err.isNetwork;
+                if (isNetwork) {
+                    setStatus('statusRaportPatrol', 'Błąd sieci/CORS podczas wysyłania raportu patrolu. Sprawdź połączenie / hostowanie pliku.', false);
+                    console.error('Raport patrolu - błąd sieci/CORS:', err);
+                } else {
+                    setStatus('statusRaportPatrol', 'Błąd podczas wysyłania raportu patrolu: ' + err.message, false);
+                }
             }
         }
 
@@ -666,7 +744,13 @@ function pokazPoleArtykulu() {
                 document.getElementById('dataSporzadzeniaInterw').value = '';
 
             } catch(err) {
-                setStatus('statusRaportInterw', 'Błąd podczas wysyłania raportu interwencji: ' + err.message, false);
+                const isNetwork = !!err.isNetwork;
+                if (isNetwork) {
+                    setStatus('statusRaportInterw', 'Błąd sieci/CORS podczas wysyłania raportu interwencji. Sprawdź połączenie / hostowanie pliku.', false);
+                    console.error('Raport interwencji - błąd sieci/CORS:', err);
+                } else {
+                    setStatus('statusRaportInterw', 'Błąd podczas wysyłania raportu interwencji: ' + err.message, false);
+                }
             }
         }
 
@@ -723,12 +807,21 @@ function pokazPoleArtykulu() {
                 document.getElementById('zatrzymanieForm').reset();
 
             } catch(err) {
-                setStatus('statusZatrzymanie', 'Błąd podczas wysyłania protokołu zatrzymania: ' + err.message, false);
+                const isNetwork = !!err.isNetwork;
+                if (isNetwork) {
+                    setStatus('statusZatrzymanie', 'Błąd sieci/CORS podczas wysyłania protokołu zatrzymania. Sprawdź hosting lub proxy.', false);
+                    console.error('Protokół zatrzymania - błąd sieci/CORS:', err);
+                } else {
+                    setStatus('statusZatrzymanie', 'Błąd podczas wysyłania protokołu zatrzymania: ' + err.message, false);
+                }
             }
         }
 
         // Pre-init
         toggleRaportType();
+        document.addEventListener('DOMContentLoaded', () => {
+            pokazPoleArtykulu();
+        });
     </script>
 </body>
 </html>
